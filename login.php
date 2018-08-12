@@ -71,11 +71,9 @@
 
     				mysqli_stmt_execute($stmt);
 
-    				mysqli_stmt_bind_result($stmt, $result);
+    				$result = mysqli_stmt_get_result($stmt);
 
-    				mysqli_stmt_fetch($stmt);
-
-  				$numRows = mysqli_num_rows($result);
+  				$numRows = mysqli_stmt_num_rows($result);
 
   				//if there are no users with that username in the database the user must register
 				if($numRows != 1){
