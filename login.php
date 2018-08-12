@@ -61,25 +61,38 @@
 		}
 
 		if(isset($_POST['loginBtn'])) {
+
 			$username = $_POST['username'];
 			$password = $_POST['password'];
-			$login = "SELECT * FROM Users Where username ='".$username."'";
-			$result = mysqli_query($con,$login);
-			$numRows = mysqli_num_rows($result);
-			
-			//if there are no users with that username in the database the user must register
-			if($numRows != 1){
-				echo "<br/>You must register";
-			} else if($numRows = 1){
-				$row = mysqli_fetch_assoc($result);
-				if($password != $row['password']){
-					echo "<br/>Username or Password Incorrect";
-				}else{
-					$_SESSION['userID'] = $row['userID'];
-					header("Location: index.php");
+
+			if ($stmt = mysqli_prepare($con, "SELECT * FROM Users Where username =?")) {
+
+    				mysqli_stmt_bind_param($stmt, "s", $username);
+
+    				mysqli_stmt_execute($stmt);
+
+    				mysqli_stmt_bind_result($stmt, $result);
+
+    				mysqli_stmt_fetch($stmt);
+
+  				$numRows = mysqli_num_rows($result);
+
+  				//if there are no users with that username in the database the user must register
+				if($numRows != 1){
+					echo "<br/>You must register";
+				} else if($numRows = 1){
+					if($password != $result['password']){
+						echo "<br/>Username or Password Incorrect";
+					}else{
+						$_SESSION['userID'] = $result['userID'];
+						header("Location: index.php");
 				}
 			}
-		}
+
+    		mysqli_stmt_close($stmt);
+   		 mysqli_close($con);
+
+    }
 	?>
 	</center>
 	</td>
