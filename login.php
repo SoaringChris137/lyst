@@ -74,15 +74,17 @@
     				$result = mysqli_stmt_get_result($stmt);
 
   				$numRows = mysqli_stmt_num_rows($result);
+				
+				$row = mysqli_fetch_array($result);
 
   				//if there are no users with that username in the database the user must register
 				if($numRows != 1){
 					echo "<br/>You must register";
 				} else if($numRows = 1){
-					if($password != $result['password']){
+					if($password != $row['password']){
 						echo "<br/>Username or Password Incorrect";
 					}else{
-						$_SESSION['userID'] = $result['userID'];
+						$_SESSION['userID'] = $row['userID'];
 						header("Location: index.php");
 				}
 			}
